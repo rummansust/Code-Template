@@ -61,76 +61,76 @@ stack<int> S;
 
 void init(int n)
 {
-    id=0,com=0;
-    while(!S.empty()) S.pop();
-    for(int i=0;i<=n;i++) adj[i].clear();
-    return ;
+  id=0,com=0;
+  while(!S.empty()) S.pop();
+  for(int i=0;i<=n;i++) adj[i].clear();
+  return ;
 }
 
 void scc(int u)
 {
-    color[u]=1;
-    S.push(u);
-    distime[u]=height[u]=id++;
-    int v;
-    for(int i=0;i<SZ(adj[u]);i++)
+  color[u]=1;
+  S.push(u);
+  distime[u]=height[u]=id++;
+  int v;
+  for(int i=0;i<SZ(adj[u]);i++)
+  {
+    v=adj[u][i];
+    if(color[v]==1) height[u]=min(height[u],distime[v]);
+    else if(color[v]==0)
     {
-        v=adj[u][i];
-        if(color[v]==1) height[u]=min(height[u],distime[v]);
-        else if(color[v]==0)
-        {
-            scc(v);
-            height[u]=min(height[u],height[v]);
-        }
+      scc(v);
+      height[u]=min(height[u],height[v]);
     }
-    if(height[u]==distime[u])
+  }
+  if(height[u]==distime[u])
+  {
+    com++;
+    do
     {
-        com++;
-        do
-        {
-            v=S.top();
-            S.pop();
-            color[v]=2;
-            group_id[v]=com;
-            num_com[com]++;
-        }
-        while(v!=u);
+      v=S.top();
+      S.pop();
+      color[v]=2;
+      group_id[v]=com;
+      num_com[com]++;
     }
-    return ;
+    while(v!=u);
+  }
+  return ;
 }
 
 void TarjanSCC(int n)
 {
-    clrall(color,0);
-    clrall(num_com,0);
-    for(int i=1;i<=n;i++) if(!color[i]) scc(i);
-    return ;
+  clrall(color,0);
+  clrall(num_com,0);
+  for(int i=1;i<=n;i++) if(!color[i]) scc(i);
+  return ;
 }
 
 int main()
 {
-    int n,test,cas=0,u,v,m,in,out;
-    scanf("%d",&test);
-    while(test--)
+  int n,test,cas=0,u,v,m,in,out;
+  scanf("%d",&test);
+  while(test--)
+  {
+    scanf("%d %d",&n,&m);
+    init(n);
+    for(int i=0;i<m;i++)
     {
-        scanf("%d %d",&n,&m);
-        init(n);
-        for(int i=0;i<m;i++)
-        {
-            scanf("%d %d",&u,&v);
-            adj[u].psb(v);
-        }
+      scanf("%d %d",&u,&v);
+      adj[u].psb(v);
     }
-    return 0;
+  }
+  return 0;
 }
 /*
-input :
-1
-7 3
-1 2
-3 4
-5 6
-
-output :
-case 1: 4
-*/
+ input :
+ 1
+ 7 3
+ 1 2
+ 3 4
+ 5 6
+ 
+ output :
+ case 1: 4
+ */

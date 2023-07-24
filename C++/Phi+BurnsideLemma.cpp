@@ -1,3 +1,4 @@
+
 #include <sstream>
 #include <queue>
 #include <stack>
@@ -19,8 +20,12 @@
 #include <string.h>
 #include <assert.h>
 #include <time.h>
+#include <unordered_map>
+#include <unordered_set>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 #define SZ(x) ((int)x.size())
 #define all(a) a.begin(),a.end()
@@ -53,10 +58,8 @@ ll MulModD(ll B, ll P,ll M) {   ll I=((long double)B*(long double)P/(long double
 ll BigMod(ll B,ll P,ll M) {     ll R=1; while(P>0)      { if(P%2==1) { R=(R*B)%M; } P/=2; B=(B*B)%M; } return R; } /// (B^P)%M
 
 ll BigModML(ll B,ll P,ll M) {     ll R=1; while(P>0)      { if(P%2==1) { R=MulModL(R,B,M); } P/=2; B=MulModL(B,B,M); } return R; } /// (B^P)%M
-
-template<class T>inline T _GCD(T a,T b){if(b==0) return a;return _GCD(b,a%b);}
-template<class T>inline T _LCM(T a,T b){T g=_GCD(a,b);return ((a/g)*b);}
-
+template<class T> T _gcd(T a, T b){ T c = a % b; while(c != 0) { a = b; b = c; c = a % b; } return b;}
+template<class T>inline T _lcm(T a,T b){T g=_gcd(a,b);return ((a/g)*b);}
 template<class T1> void deb(T1 e1){cout<<e1<<"\n";}
 template<class T1,class T2> void deb(T1 e1,T2 e2){cout<<e1<<" "<<e2<<"\n";}
 template<class T1,class T2,class T3> void deb(T1 e1,T2 e2,T3 e3){cout<<e1<<" "<<e2<<" "<<e3<<"\n";}
@@ -74,25 +77,65 @@ template<class T1,class T2,class T3,class T4,class T5,class T6,class T7> void de
 //int dx[]={1,1,2,2,-1,-1,-2,-2};/*night move*/
 //int dy[]={2,-2,1,-1,2,-2,1,-1};/*night move*/
 
-int main()
+const int MAX = 110000;
+char sieve[(MAX>>4) + 7];
+int phi[MAX];
+ll M=1000000007LL;
+
+void sieve_phi()
 {
-    #ifdef MAHDI
-//    Read;
-//    Write;
-    #endif // MAHDI
-    return 0;
+  int r,i,j;
+  for(i=1;i<MAX;i++)
+  {
+    phi[i]=i;
+    if(!(i&1)) phi[i]>>=1;
+  }
+  for(i=3;i<MAX;i+=2)
+  {
+    if(!(sieve[i>>4]&(1<<((i>>1)&7))))
+    {
+      phi[i]--;
+      r=i<<1;
+      for(j=r;j<MAX;j+=i)
+      {
+        if(j&1) {
+          sieve[j>>4]|=(1<<((j>>1)&7));
+        }
+        phi[j]/=i;
+        phi[j]*=(i-1);
+      }
+    }
+  }
+  return ;
 }
 
+///burnside_lemma = 1/n(S(phi(n/d)*k^d));
+template<class T> inline T Burnside_Lemma_div(T n,T k)
+{
+  T i;
+  T sq=sqrt(n)+1,res=(T) 0;
+  for(i=1;i<sq;i++)
+  {
+    if(n%i==0)
+    {
+      res+=(phi[n/i]*BigMod(k,i,M))%M;
+      if(n/i!=i) res+=(phi[i]*BigMod(k,n/i,M))%M;
+      res%=M;
+      if(res<0) res+=M;
+    }
+  }
+  return res;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+int main()
+{
+  sieve_phi();
+  ll n,k,res,inv;
+  SF("%lld %lld",&n,&k);
+  res=Burnside_Lemma_div(n,k);
+  inv=BigMod(n,M-2,M);
+  res=(res*inv)%M;
+  if(res<0) res+=M;
+  PF("%lld\n",res);
+  return 0;
+}
