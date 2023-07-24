@@ -296,8 +296,8 @@ struct GJEModK {
     if (st == noSolutions) {
       return -1;
     }
-    int r = 0;
-    for (auto &w : where) r += w == -1;
+    int r = m;
+    for (auto &w : where) r -= w == -1;
     return r;
   }
 
@@ -349,7 +349,7 @@ void work() {
         e.addRow(row);
       }
       int rank = e.rank(k, n);
-      res = BigMod(k, rank, MOD);
+      res = BigMod(k, n - rank, MOD);
     } else {
       res = 1;
     }

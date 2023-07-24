@@ -278,8 +278,8 @@ struct GaussJordanEliminationMod2 {
     if (st == noSolutions) {
       return -1;
     }
-    int r = 0;
-    for (auto &w : where) r += w == -1;
+    int r = m;
+    for (auto &w : where) r -= w == -1;
     return r;
   }
 
@@ -351,7 +351,7 @@ void work() {
           e.setMatrix(mat);
           int r = e.rank(n);
           if (r != -1) {
-            res += BigMod(2, r, MOD);
+            res += BigMod(2, n-r, MOD);
           }
           if (res >= MOD) res -= MOD;
         }
