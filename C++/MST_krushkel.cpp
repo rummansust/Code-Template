@@ -46,7 +46,6 @@ struct edge
     int u,v,cost;
     edge(int u,int v,int w):u(u),v(v),cost(w){}
 };
-
 vector<edge> edge_list;
 vector<set_> dset;
 vector<edge> mst;

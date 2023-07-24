@@ -16,7 +16,7 @@
 #define clr(a,x) memset(a,x,sizeof(a));
 #define ll long long
 #define pb(b) push_back(b)
-#define oo 100000000000000000LL
+#define oo 1<<28
 #define SZ 1000000
 
 //reverse(a,a+n);
@@ -36,68 +36,73 @@ using namespace std;
 //int rr[]={1,1,2,2,-1,-1,-2,-2};/*night move*/
 //int cc[]={2,-2,1,-1,2,-2,1,-1};/*night move*/
 
-ll arr[SZ],tmp[SZ],L[SZ],lis_seq[SZ];
+const int MAX = 1000000
+int arr[MAX],tmp[MAX],L[MAX],lis_seq[MAX];
 
-ll bin_search(ll item,ll start,ll end)
+int bin_search(int item,int start,int end)
 {
-    ll mid=(start + end) / 2;
-    while(start <= end)
-     {
-//        if(tmp[mid]==item) return mid;
-        if(start==end) break;
-        if(tmp[mid] > item) end=mid;
-        else start=mid+1;
-        mid=(start+end)/2;
-    }
-    return end;
+  int mid=(start + end)>>1;
+  while(start <= end)
+  {
+    //If values are not distinct, comment out this line
+    if(tmp[mid]==item) return mid;
+    if(start==end) break;
+    if(tmp[mid] > item) end=mid;
+    else start=mid+1;
+    mid=(start+end)>>1;
+  }
+  return end;
 }
-ll lis_constructor_fun(ll n)
+
+int lis_constructor_fun(int n)
 {
-    ll start=0,end=n,lis_len=0,loc;//set lowerbound & upper bound for b_search
-    tmp[0]=-oo;//set -infinity
-    for(ll i=1;i<=n;i++)//set infinity
-        tmp[i]=oo;
-    for(ll i=0;i<n;i++)//construct L[] arry.
+  int start=0,end=n,lis_len=0,loc;//set lowerbound & upper bound for b_search
+  tmp[0]=-oo;//set -infinity
+  for(int i=1;i<=n;i++)//set infinity
+    tmp[i]=oo;
+  for(int i=0;i<n;i++)//construct L[] arry.
+  {
+    loc=bin_search(arr[i],start,end);//pick loc and set element.
+    tmp[loc]=arr[i];
+    lis_len=max(loc,lis_len);//find maximum length
+    L[i]=loc;//set loc in L[] for find lis next.
+    end=lis_len+1;//this is k
+  }
+  return lis_len;
+}
+
+void print_fun(int len,int n)//printing LIS.
+{
+  int tt=len;
+  for(int i=n-1;i>-1;i--)
+  {
+    if(L[i]==len)
     {
-        loc=bin_search(arr[i],start,end);//pick loc and set element.
-        tmp[loc]=arr[i];
-        lis_len=max(loc,lis_len);//find maximum length
-        L[i]=loc;//set loc in L[] for find lis next.
-        end=lis_len+1;//this is k
+      lis_seq[--len]=arr[i];
+      if(!len) break;
     }
-    return lis_len;
+  }
+  for(int i=0;i<tt;i++) cout<<lis_seq[i]<<" ";
+  cout<<endl;
+  return;
 }
-void print_fun(ll len,ll n)//printing lis.
-{
-    ll tt=len;
-    for(ll i=n-1;i>-1;i--)
-    {
-        if(L[i]==len)
-        {
-            lis_seq[--len]=arr[i];
-            if(!len) break;
-        }
-    }
-    for(ll i=0;i<tt;i++) cout<<lis_seq[i]<<" ";
-    cout<<endl;
-    return;
-}
+
 int main()
 {
-    ll n,len;
-    while(cin>>n)
+  int n,len;
+  while(cin>>n)
+  {
+    for(int i=0;i<n;i++)//input sequence
     {
-        for(ll i=0;i<n;i++)//input sequence
-        {
-            cin>>arr[i];
-        }
-        len=lis_constructor_fun(n);//find lis length
-//        for(ll i=0;i<n;i++) cout<<L[i]<<" ";
-//        cout<<endl;
-        cout<<len<<endl;//print lis length
-        print_fun(len,n);//print lis
-        for(ll i=0;i<n;i++) cout<<L[i]<<" ";
-        cout<<endl;
+      cin>>arr[i];
     }
-    return 0;
+    len=lis_constructor_fun(n);//find lis length
+    //        for(int i=0;i<n;i++) cout<<L[i]<<" ";
+    //        cout<<endl;
+    cout<<len<<endl;//print lis length
+    print_fun(len,n);//print lis
+    for(int i=0;i<n;i++) cout<<L[i]<<" ";
+    cout<<endl;
+  }
+  return 0;
 }
