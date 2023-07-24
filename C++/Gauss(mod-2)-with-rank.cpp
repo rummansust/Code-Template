@@ -264,7 +264,7 @@ struct GaussJordanEliminationMod2 {
 
   void reset() { a.clear(); }
 
-  // Last row will have the targeted bits
+  // Last column will have the targeted bits
   SolutionType gauss(int m, bitset<_bitsetSize> &ans) {
     // where(i) contains the row which has 1 at column i
     vector<int> where(m, -1);
