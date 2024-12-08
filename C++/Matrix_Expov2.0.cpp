@@ -152,7 +152,7 @@ public:
     {
         for (const auto &row : mat)
         {
-            for (unsigned int val : row)
+            for (const auto &val : row)
             {
                 cerr << val << " ";
             }
