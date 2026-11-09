@@ -223,8 +223,9 @@ ll power(ll B, ll P)
 typedef pair<int, int> pii;
 
 const int ALPHABET_SIZE = 26;
-const int MAX_NODES = 1e6 + 5;
+const int MAX_WORDS = 1e3;
 const int MAX_WORD_LENGTH = 105;
+const int MAX_NODES = MAX_WORDS * MAX_WORD_LENGTH;
 
 struct state
 {
@@ -239,10 +240,10 @@ struct state
   }
 };
 
-state T[MAX_NODES];                     // normally total character
-char words[MAX_NODES][MAX_WORD_LENGTH]; // 1 based
-int sz, _last;                          // sz = node no(1 based)(0 is root), _last is used while iteration
-char str[MAX_NODES];
+state T[MAX_NODES];      // normally total character
+string words[MAX_WORDS]; // 1 based - using string array instead of char array
+int sz, _last;           // sz = node no(1 based)(0 is root), _last is used while iteration
+string str;
 int toporder[MAX_NODES];             // for topological sort
 int freq[MAX_NODES], ans[MAX_NODES]; // ans = occurance of the word in the string, freq = substring frequency
 
@@ -252,7 +253,7 @@ void initialize() // normally only 1st node (initialize all for safety)
   sz = 1;
 }
 
-void buildahocorasick(int n) // how many node
+void buildahocorasick(int n) // how many words
 {
   initialize();
   int i, j, len, u, v, p;
@@ -262,7 +263,7 @@ void buildahocorasick(int n) // how many node
   for (i = 1; i <= n; i++)
   {
     _last = 0;
-    len = strlen(words[i]);
+    len = SZ(words[i]);
     for (j = 0; j < len; j++)
     {
       ch = words[i][j] - 'a'; // sometimes change here
@@ -321,7 +322,7 @@ void search(int numwords)
   char ch;
 
   cur = 0;
-  len = strlen(str);
+  len = SZ(str);
   memset(freq, 0, sizeof(int) * sz);
 
   for (i = 0; i < len; i++)
@@ -355,12 +356,12 @@ void work()
 {
   int n = 4;
   // 1-based indexing for words
-  strcpy(words[1], "he");
-  strcpy(words[2], "she");
-  strcpy(words[3], "his");
-  strcpy(words[4], "hers");
+  words[1] = "he";
+  words[2] = "she";
+  words[3] = "his";
+  words[4] = "hers";
 
-  strcpy(str, "ushers");
+  str = "ushers";
 
   buildahocorasick(n);
   search(n);
