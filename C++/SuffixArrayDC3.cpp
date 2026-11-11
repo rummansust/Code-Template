@@ -171,7 +171,7 @@ void calc_lcp()
 
 int main()
 {
-    string str = "aabaabbaba";
+    string str = "baaaababababbababbab";
     n = str.size();
     s = (unsigned char *)str.c_str();
     SA_IS(s, sa, n + 1, 256, 1);
@@ -181,7 +181,7 @@ int main()
     {
         cout << str.substr(sa[i+1]);
         if (i < n)
-            cout << " " << lcp[i+1];
+            cout << " " << lcp[i+1]<<" "<<sa[i+1];
         cout << endl;
     }
 
