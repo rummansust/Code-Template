@@ -1,1 +1,24 @@
-.vscode/
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# Unignore GEN
+!*GEN
+
+# Xcode
+*.dSYM
+
+# Mac OS
+.DS_Store
+
+# Others
+.tmp.driveupload
+.tmp.drivedownload
+.vscode
+*.ini
+*.log
